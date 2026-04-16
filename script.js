@@ -744,13 +744,6 @@ function tick() {
   if (activeView === 'people') renderPeopleView();
 }
 
-  // Live app: silent updates only — no DOM rebuild, no scroll jump
-  updateNowNext();
-  silentUpdateTimeline();
-  if (activeView === 'people') renderPeopleView();
-}
-
-
 function bootLiveApp() {
   // Clear any leftover pre-trip screen (safe even if you already deleted the HTML)
   const pts = document.getElementById('pre-trip-screen');
