@@ -830,13 +830,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Splash → route
   setTimeout(() => {
-    const tripActive = now() >= TRIP_START_UTC;
-    if (tripActive) {
-      // Skip splash, go straight to app
-      document.getElementById('splash').classList.add('out');
-      setTimeout(bootLiveApp, 550);
-    } else {
-      bootPreTrip();
-    }
+    // === TEMPORARY BYPASS FOR TESTING ===
+    // Force live app (removes pre-trip countdown screen)
+    document.getElementById('splash').classList.add('out');
+    setTimeout(bootLiveApp, 550);
+    // =====================================
   }, 1400);
 });
