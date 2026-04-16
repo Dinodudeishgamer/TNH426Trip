@@ -6,11 +6,6 @@
    ================================================================ */
 'use strict';
 
-// ── TRIP GATE ────────────────────────────────────────────────────
-// Schedule unlocks at exactly 7:00 AM Central Time on April 17 2026
-// CDT = UTC-5 in April, so 7:00 AM CDT = 12:00 UTC
-const TRIP_START_UTC = new Date('2026-04-17T12:00:00Z'); // 7am CDT
-
 // ── PEOPLE ───────────────────────────────────────────────────────
 const PEOPLE = {
   dino:    { name: 'Dino',    initials: 'D',  color: '#800080' },
@@ -396,7 +391,6 @@ const DAYS = [
 // ── STATE ─────────────────────────────────────────────────────────
 let activeDayIndex = 0;
 let activeView = 'timeline';
-let appState = 'loading'; // 'loading' | 'pre-trip' | 'live'
 let tickTimer = null;
 
 // ── TIME UTILS ────────────────────────────────────────────────────
@@ -522,29 +516,6 @@ window.openMaps = function(addr, e) {
   window.open(mapsUrl(addr), '_blank');
 };
 
-// ── PRE-TRIP COUNTDOWN ────────────────────────────────────────────
-function renderPreTripCountdown() {
-  const diff = TRIP_START_UTC - now();
-  if (diff <= 0) { bootLiveApp(); return; }
-
-  const totalSec = Math.floor(diff / 1000);
-  const d  = Math.floor(totalSec / 86400);
-  const h  = Math.floor((totalSec % 86400) / 3600);
-  const m  = Math.floor((totalSec % 3600) / 60);
-  const s  = totalSec % 60;
-
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = String(val).padStart(2,'0'); };
-  set('pt-days', d);
-  set('pt-hours', h);
-  set('pt-mins', m);
-  set('pt-secs', s);
-}
-
-function buildPreTripAvatars() {
-  const el = document.getElementById('pre-trip-avatars');
-  if (!el) return;
-  el.innerHTML = Object.keys(PEOPLE).map(k => avatarEl(k, 'md')).join('');
-}
 
 // ── NOW / NEXT HERO ───────────────────────────────────────────────
 function updateNowNext() {
@@ -767,15 +738,11 @@ function switchDay(idx) {
 
 // ── SILENT TICK ───────────────────────────────────────────────────
 function tick() {
-  // Check if we've crossed the trip start boundary
-  if (appState === 'pre-trip' && now() >= TRIP_START_UTC) {
-    bootLiveApp();
-    return;
-  }
-  if (appState === 'pre-trip') {
-    renderPreTripCountdown();
-    return;
-  }
+  // Live app: silent updates only
+  updateNowNext();
+  silentUpdateTimeline();
+  if (activeView === 'people') renderPeopleView();
+}
 
   // Live app: silent updates only — no DOM rebuild, no scroll jump
   updateNowNext();
@@ -783,19 +750,6 @@ function tick() {
   if (activeView === 'people') renderPeopleView();
 }
 
-// ── BOOT SEQUENCES ────────────────────────────────────────────────
-function bootPreTrip() {
-  appState = 'pre-trip';
-  document.getElementById('splash').classList.add('out');
-  setTimeout(() => {
-    document.getElementById('splash').style.display = 'none';
-    const screen = document.getElementById('pre-trip-screen');
-    screen.classList.remove('hidden');
-    buildPreTripAvatars();
-    renderPreTripCountdown();
-    tickTimer = setInterval(tick, 1000);
-  }, 550);
-}
 
 function bootLiveApp() {
   appState = 'live';
@@ -828,15 +782,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchDay(i));
   });
 
-  // Splash → route
+  // Splash → straight to live app (no pre-trip countdown)
   setTimeout(() => {
-    const tripActive = now() >= TRIP_START_UTC;   // ←←← THIS LINE
-    if (tripActive) {
-      // Skip splash, go straight to app
-      document.getElementById('splash').classList.add('out');
-      setTimeout(bootLiveApp, 550);
-    } else {
-      bootPreTrip();
-    }
+    document.getElementById('splash').classList.add('out');
+    setTimeout(bootLiveApp, 550);
   }, 1400);
 });
