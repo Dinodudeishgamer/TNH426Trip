@@ -752,11 +752,11 @@ function tick() {
 
 
 function bootLiveApp() {
-  appState = 'live';
-  // Clear pre-trip screen
+  // Clear any leftover pre-trip screen (safe even if you already deleted the HTML)
   const pts = document.getElementById('pre-trip-screen');
-  if (pts && !pts.classList.contains('hidden')) pts.classList.add('hidden');
+  if (pts) pts.classList.add('hidden');
 
+  // Show the main app
   const app = document.getElementById('app');
   app.classList.remove('hidden');
 
