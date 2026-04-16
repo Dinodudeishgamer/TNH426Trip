@@ -187,6 +187,98 @@ body::before {
 }
 @keyframes barFill { from { width: 0; } to { width: 100%; } }
 
+/* ── PRE-TRIP SCREEN ─────────────────────────────────────────── */
+#pre-trip-screen {
+  position: fixed; inset: 0; z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.pre-trip-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(41,217,194,.18), transparent 65%),
+              linear-gradient(160deg, #0b1120 0%, #0e0e14 100%);
+}
+.pre-trip-content {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 0 28px;
+  animation: splashIn 0.7s ease both;
+}
+.pre-trip-icon { font-size: 3rem; margin-bottom: 16px; }
+.pre-trip-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--d0-accent);
+  margin-bottom: 8px;
+}
+.pre-trip-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-2);
+  margin-bottom: 28px;
+}
+.pre-trip-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.countdown-block {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--mist2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-md);
+  padding: 14px 12px 10px;
+  min-width: 64px;
+}
+.countdown-block span {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--d0-accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.countdown-block label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--text-3);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.countdown-sep {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+.pre-trip-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  margin-bottom: 36px;
+}
+.pre-trip-crew { }
+.pre-trip-crew-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+.pre-trip-avatars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 /* ── APP LAYOUT ──────────────────────────────────────────────── */
 #app {
   position: relative; z-index: 1;
@@ -337,7 +429,6 @@ body::before {
   flex-shrink: 0;
   position: relative;
   transition: color .25s;
-  appearance: none;
   -webkit-appearance: none;
 }
 .tab-pip {
@@ -706,7 +797,6 @@ body::before {
   cursor: pointer;
   color: var(--text-3);
   transition: color .2s;
-  appearance: none;
   -webkit-appearance: none;
 }
 .bnav-btn.active { color: var(--accent); transition: color .4s; }
